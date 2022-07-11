@@ -4,25 +4,29 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
     // defino el modelo Raza
     sequelize.define('Raza', {
-        ID: {
+        id: {
             type: DataTypes.INTEGER,
-            primaryKey: true
+            autoIncrement: true,
+            get() {
+                return this.getDataValue('id') + 300;
+            }
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
             primaryKey: true
         },
         height: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.STRING,
             allowNull: false
         },
         weight: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
+            type: DataTypes.STRING,
+            allowNull: false
         },
-        yearsOfLife: {
-            type: DataTypes.INTEGER
+        lifeSpan: {
+            type: DataTypes.STRING
         }
+    }, {
+        timestamps: false
     });
 };

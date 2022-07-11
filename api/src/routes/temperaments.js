@@ -1,10 +1,15 @@
 const { Router } = require('express');
-const axios = require('axios');
+const { getTemperaments } = require('../utils/models')
 
 const temperaments = Router();
 
-temperaments.get('/', (req, res) => {
-    
+temperaments.get('/', async (req, res, next) => {
+    try {
+        const data = await getTemperaments();
+        res.send(data);
+    } catch (e) {
+        next(e);
+    }
 })
 
 module.exports = temperaments;
