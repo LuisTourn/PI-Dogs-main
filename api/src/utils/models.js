@@ -12,7 +12,7 @@ const breedsRequest = async () => {
         }
     });
     const data = responseApi.data.map(e => {
-       return {
+        return {
             id: e.id,
             image: e.image.url,
             name: e.name,
@@ -25,22 +25,21 @@ const breedsRequest = async () => {
 
 const breedDetail = async (id) => {
     if (id < 300) {
-        const response = await axios.get(`https://api.thedogapi.com/v1/breeds/${id}?api_key=${X_API_KEY}`);
-        if (!response.data.id) throw new Error('Page not found');
+        const response = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${X_API_KEY}`);
+        if (!response.data.length) throw new Error('Page not found');
+        var dataId = response.data.filter(e => e.id === id);
         var data = {
-            id: response.data.id,
-            name: response.data.name,
-            temperament: response.data.temperament,
-            weight: response.data.weight.metric,
-            height: response.data.height.metric,
-            life_span: response.data.life_span
+            id: dataId[0].id,
+            name: dataId[0].name,
+            image: dataId[0].image.url,
+            temperament: dataId[0].temperament,
+            weight: dataId[0].weight.metric,
+            height: dataId[0].height.metric,
+            lifeSpan: dataId[0].life_span
         }
     } else {
         id -= 300;
         var data = await Raza.findOne({
-            attributes: {
-                exclude: ['height']
-            },
             where: {
                 id: id
             }
@@ -51,35 +50,58 @@ const breedDetail = async (id) => {
 };
 
 const breedSeacrh = async (name) => {
-  //  if (!name) breedsRequest();
+    //  if (!name) breedsRequest();
     const responseApi = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${name}&api_key=${X_API_KEY}`);
     const responseDb = await Raza.findAll({
-        attributes: {
-            exclude: ['height']
-        },
+        attributes: ['id'],
         where: {
             name: {
                 [Op.substring]: name
             }
         }
     });
-    const data = responseApi.data.map(e => {
-        return {
-            id: e.id,
-            name: e.name,
+    const dataApi = responseApi.data.map(e => {
+        return e.id;
+        /*             name: e.name,
             temperament: e.temperament,
-            weight: e.weight.metric
-        };
+            weight: e.weight.metric */
     }).concat(responseDb);
+    const dataDb = responseDb.map(e => {
+        return e.id
+    })
+    const data = [...dataApi, ...dataDb];
     if (!data.length) throw new Error('Raza no encontrada');
     return data;
 };
 
 const breedCreator = async (obj) => {
-    const {name, height, weight, lifeSpan, temperamentId} = obj;
-    if(!name || !height || !weight) throw new Error ('Faltan datos obligatorios');
+    const { name, height, weight, lifeSpan, temperaments } = obj;
+    if (!name || !height || !weight || !temperaments.length) throw new Error('No se pudo crear raza. Faltan campos obligatorios');
     const breed = await Raza.create({ name, height, weight, lifeSpan });
-    await breed.addTemperamento(temperamentId);
+    let temperamentsId = await breed.addTemperamento(temperaments);
+    return temperamentsId
+ //   let temperamentsId = temperaments.map(e => Temperamento.findByPk(e));
+ //   await Promise.all(temperamentsId);
+//    temperament.forEach(async e =>
+//        await Temperamento.findOrCreate({
+//            where: {
+//                name: e
+//            }
+//        })
+//    );
+//    const temperaments = await Temperamento.findAll({
+//        attributes: id
+//    },
+//        {
+//            where: {
+//                name: {
+//                    [Op.like]: {
+//                        [Op.any]: temperament
+//                    }
+//                }
+//            }
+//        })
+ //   await breed.addTemperamentos(temperamentsId);
 };
 
 const setAllTemperaments = async () => {
@@ -97,8 +119,10 @@ const setAllTemperaments = async () => {
 };
 
 const getTemperaments = async () => {
-    return await Temperamento.findAll();
-}
+    const temperaments = await Temperamento.findAll();
+    if(!temperaments || !temperaments.length) throw new Error('No hay temperamentos disponibles');
+    return temperaments;
+};
 
 module.exports = {
     breedsRequest,
@@ -107,4 +131,4 @@ module.exports = {
     breedCreator,
     setAllTemperaments,
     getTemperaments
-}
+};

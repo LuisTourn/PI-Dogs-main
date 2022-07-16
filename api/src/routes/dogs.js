@@ -50,9 +50,9 @@ dogs.get('/', async (req, res) => {
 dogs.post('/', async (req, res) => {
     try {
         await breedCreator(req.body);
-        res.status(201).send('Raza creada exitosamente')
+        res.status(201).send('Raza creada exitosamente');
     } catch (e) {
-        res.status(400).send(e);
+        res.status(400).send(e.message);
     };
 })
 

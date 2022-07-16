@@ -1,0 +1,41 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.cardContainer {
+    display: flex;
+    width: 400px;
+    height: auto;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, .2);
+}
+
+img {
+    width: 330px;
+    height: 220px;
+}
+
+.image {
+    border-right: 1px solid #ddd;
+}
+
+.description {
+    background: #fbfbfb;
+}
+
+.image, .description {
+    padding: 20px;
+    text-align: center;
+}
+
+.image img {
+    border-radius: 10%;
+    box-shadow: 0 0 0 8px rgba(0, 0, 0, .06);
+    margin: 20px 30px;
+    transition: .2s;
+}
+
+
