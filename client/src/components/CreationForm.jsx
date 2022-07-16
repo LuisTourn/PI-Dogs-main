@@ -15,14 +15,6 @@ const Form = () => {
     temperaments: []
   });
 
-  const [data, setData] = useState({
-    name: '',
-    weight: '',
-    height: '',
-    lifeSpan: '',
-    temperaments: []
-  });
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,38 +22,57 @@ const Form = () => {
   }, [dispatch]);
 
   const temps = useSelector(state => state.temperaments);
-  const [checked, setChecked] =  useState(
+  const [checked, setChecked] = useState(
     new Array(124).fill(false)
   );
 
   const handleOnChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
-    setData({ ...data, 
+/*     setData({
+      ...data,
       name: input.name,
       weight: `${input.minWeight} - ${input.maxWeight}`,
       height: `${input.minHeight} - ${input.maxHeight}`,
       lifeSpan: `${input.minLifeSpan} - ${input.maxLifeSpan} years`
-    })
+    }) */
   };
 
   const handleTempsOnChange = (position) => {
     const updatedChecked = checked.map((value, index) =>
-    index === position ? !value : value
-  );
+      index === position ? !value : value
+    );
 
-  setChecked(updatedChecked);
-  setData({ ...data,
-    temperaments: temps.map((e, i) => {
-      if (checked[i] === true) return e.id
-    })
-  })
+    setChecked(updatedChecked);
+/*     setData({
+      ...data,
+      temperaments: temps.filter((e, i) => checked[i] === true)
+    }); */
   };
+
+/*   const handleCreate = (e) => {
+    e.preventDefault();
+    setData({
+      ...data,
+      name: input.name,
+      weight: `${input.minWeight} - ${input.maxWeight}`,
+      height: `${input.minHeight} - ${input.maxHeight}`,
+      lifeSpan: `${input.minLifeSpan} - ${input.maxLifeSpan} years`,
+      temperaments: temps.map(e => e.id).filter((e, i) => checked[i] === true)
+    });
+    alert('A creation request will be send', handleSubmit(e))
+  } */
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(data);
-    dispatch(createNewBreed(data));
+    dispatch(createNewBreed({
+      name: input.name,
+      weight: `${input.minWeight} - ${input.maxWeight}`,
+      height: `${input.minHeight} - ${input.maxHeight}`,
+      lifeSpan: `${input.minLifeSpan} - ${input.maxLifeSpan} years`,
+      temperaments: temps.map(e => e.id).filter((e, i) => checked[i] === true)
+    }));
     setInput({ name: '', minWeight: '', maxWeight: '', minHeight: '', maxHeight: '', minLifeSpan: '', maxLifeSpan: '', temperaments: [] });
+    setChecked(checked.fill(false));
   };
 
   return (
@@ -144,25 +155,3 @@ const Form = () => {
 };
 
 export default Form;
-
-
-
-/* const handleOnChange = (position) => {
-  const updatedCheckedState = checkedState.map((item, index) =>
-    index === position ? !item : item
-  );
-
-  setCheckedState(updatedCheckedState);
-
-  const totalPrice = updatedCheckedState.reduce(
-    (sum, currentState, index) => {
-      if (currentState === true) {
-        return sum + toppings[index].price;
-      }
-      return sum;
-    },
-    0
-  );
-
-  setTotal(totalPrice);
-}; */

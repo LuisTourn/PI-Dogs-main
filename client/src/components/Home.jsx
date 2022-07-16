@@ -8,9 +8,13 @@ const Home = () => {
   const breeds = useSelector(state => state.breeds);
   const breedsPerPage = 8;
 
-  const [breedPage, setBreedPage] = useState([...breeds].splice(0, breedsPerPage));
   const [currentPage, setCurrentPage] = useState(0);
+  const [breedPage, setBreedPage] = useState([]);
+/*   const [tempsFilter, setTempsFilter] = useState([]);
+  const [] */
 
+  if (breeds.length && !breedPage.length) setBreedPage([...breeds].splice(currentPage, breedsPerPage));
+ 
   const prevPageHandler = () => {
     const prevPage = currentPage - 1;
     if (prevPage < 0) return;
@@ -31,30 +35,23 @@ const Home = () => {
   };
 
   return (
-    <div className='container'>
-      <div className='pages'>
+    <div>
+      <div>
       <h4>{currentPage}</h4>
-        <button onClick={prevPageHandler} >Prev</button>
-        <button onClick={nextPageHandler} >Next</button>
+      <button onClick={prevPageHandler} >Prev</button>
+      <button onClick={nextPageHandler} >Next</button>
       </div>
-      {
-        (breedPage.length > 0 && breedPage.map(e => <Breed
-          key={e.id}
-          name={e.name}
-          weight={e.weight}
-          temperament={e.temperament}
-          image={e.image}
-          id={e.id}
-        />)) ||
-        (breeds && [...breeds].splice(0, breedsPerPage).map(e => <Breed
-          key={e.id}
-          name={e.name}
-          weight={e.weight}
-          temperament={e.temperament}
-          image={e.image}
-          id={e.id}
-        />))
-      };
+      <div className='container'>
+        {
+          (breedPage.length > 0 && breedPage.map(e => <Breed
+            key={e.id}
+            name={e.name}
+            weight={e.weight}
+            temperament={e.temperament}
+            image={e.image}
+            id={e.id}
+          />))};
+      </div>
     </div>
   );
 };

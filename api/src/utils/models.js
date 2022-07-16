@@ -1,4 +1,3 @@
-require('dotenv').config();
 const axios = require('axios');
 const { Raza, Temperamento } = require('../db');
 const { Op } = require('sequelize');
@@ -9,9 +8,10 @@ const breedsRequest = async () => {
     const responseDb = await Raza.findAll({
         attributes: {
             exclude: ['height']
-        }
+        },
+        include: Temperamento
     });
-    const data = responseApi.data.map(e => {
+    const dataApi = responseApi.data.map(e => {
         return {
             id: e.id,
             image: e.image.url,
@@ -20,32 +20,50 @@ const breedsRequest = async () => {
             weight: e.weight.metric
         };
     });
-    return data.concat(responseDb);
+    const dataDb = responseDb.map(e => {
+        return {
+            id: e.id,
+            name: e.name,
+            temperament: e.temperament,
+            weight: e.weight,
+            temperament: e.Temperamentos.reduce((temp, el) => temp.concat(`, ${el.name}`),'').slice(2)
+        };
+    });
+    return dataApi.concat(dataDb);
 };
 
 const breedDetail = async (id) => {
     if (id < 300) {
-        const response = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${X_API_KEY}`);
-        if (!response.data.length) throw new Error('Page not found');
-        var dataId = response.data.filter(e => e.id === id);
+        const responseApi = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${X_API_KEY}`);
+        if (!responseApi.data.length) throw new Error('Page not found');
+        var dataApi = responseApi.data.filter(e => e.id === id);
         var data = {
-            id: dataId[0].id,
-            name: dataId[0].name,
-            image: dataId[0].image.url,
-            temperament: dataId[0].temperament,
-            weight: dataId[0].weight.metric,
-            height: dataId[0].height.metric,
-            lifeSpan: dataId[0].life_span
-        }
+            id: dataApi[0].id,
+            name: dataApi[0].name,
+            image: dataApi[0].image.url,
+            temperament: dataApi[0].temperament,
+            weight: dataApi[0].weight.metric,
+            height: dataApi[0].height.metric,
+            lifeSpan: dataApi[0].life_span
+        };
     } else {
         id -= 300;
-        var data = await Raza.findOne({
+        var dataDb = await Raza.findOne({
             where: {
                 id: id
-            }
+            },
+            include: Temperamento
         });
-        if (data === null) throw new Error('Page not found');
-    }
+        if (dataDb === null) throw new Error('Page not found');
+        var data = {
+            id: dataDb.id,
+            name: dataDb.name,
+            temperament: dataDb.Temperamentos.reduce((temp, el) => temp.concat(`, ${el.name}`),'').slice(2),
+            weight: dataDb.weight,
+            height: dataDb.height,
+            lifeSpan: dataDb.lifeSpan
+        };
+    };
     return data;
 };
 
@@ -68,7 +86,7 @@ const breedSeacrh = async (name) => {
     }).concat(responseDb);
     const dataDb = responseDb.map(e => {
         return e.id
-    })
+    });
     const data = [...dataApi, ...dataDb];
     if (!data.length) throw new Error('Raza no encontrada');
     return data;

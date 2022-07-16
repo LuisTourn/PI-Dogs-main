@@ -55,15 +55,17 @@ const getAllTemperaments = () => async (dispatch) => {
     }
 };
 
-const createNewBreed = (data) => async (dispatch) => {
+const createNewBreed = (value) => async (dispatch) => {
     try {
-        await axios({ method: 'post', url: 'http://localhost:3001/dogs', dat: data });
-        return dispatch({
+        await axios({ method: 'post', url: 'http://localhost:3001/dogs', data: value });
+        dispatch({
             type: CREATE_BREED,
-            payload: data
+            payload: value
         });
+        return alert('Breed created');
     } catch (e) {
         console.log(e);
+        return alert('Missing to enter mandatory data');
     }
 };
 
