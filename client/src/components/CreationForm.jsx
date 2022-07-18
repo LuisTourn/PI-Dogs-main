@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNewBreed } from '../redux/actions';
-import { getAllTemperaments } from '../redux/actions';
+import validateForm from '../utils';
+/* import { getAllTemperaments } from '../redux/actions'; */
 
 const Form = () => {
   const [input, setInput] = useState({
@@ -15,13 +16,14 @@ const Form = () => {
     temperaments: []
   });
 
+  const temps = useSelector(state => state.temperaments);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
+/*  useEffect(() => {
     dispatch(getAllTemperaments());
-  }, [dispatch]);
+  }, [dispatch]); */
 
-  const temps = useSelector(state => state.temperaments);
   const [checked, setChecked] = useState(
     new Array(124).fill(false)
   );
@@ -81,6 +83,7 @@ const Form = () => {
       <p>Fulfill the information below</p>
       <label>Name: </label>
       <input
+        type='text'
         name='name'
         value={input.name}
         onChange={handleOnChange}
@@ -88,12 +91,14 @@ const Form = () => {
       <label>Weight: </label>
       <label>Min: </label>
       <input
+        type='number'
         name='minWeight'
         value={input.minWeight}
         onChange={handleOnChange}
       />
       <label>Max: </label>
       <input
+        type='number'
         name='maxWeight'
         value={input.maxWeight}
         onChange={handleOnChange}
@@ -101,12 +106,14 @@ const Form = () => {
       <label>Height: </label>
       <label>Min: </label>
       <input
+        type='number'
         name='minHeight'
         value={input.minHeight}
         onChange={handleOnChange}
       />
       <label>Max: </label>
       <input
+        type='number'
         name='maxHeight'
         value={input.maxHeight}
         onChange={handleOnChange}
@@ -114,12 +121,14 @@ const Form = () => {
       <label>Life Span: </label>
       <label>Min: </label>
       <input
+        type='number'
         name='minLifeSpan'
         value={input.minLifeSpan}
         onChange={handleOnChange}
       />
       <label>Max: </label>
       <input
+        type='number'
         name='maxLifeSpan'
         value={input.maxLifeSpan}
         onChange={handleOnChange}

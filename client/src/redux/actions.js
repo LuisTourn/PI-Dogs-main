@@ -3,7 +3,13 @@ import {
     GET_BREED_DETAIL,
     GET_BREED_SEARCH,
     GET_ALL_TEMPERAMENTS,
-    CREATE_BREED
+    CREATE_BREED,
+    AZ_ALPHABETIC_ORDER,
+    ZA_ALPHABETIC_ORDER,
+    MAX_HIGHER_WEIGHT_ORDER,
+    MIN_HIGHER_WEIGHT_ORDER,
+    MAX_LOWER_WEIGHT_ORDER,
+    MIN_LOWER_WEIGHT_ORDER
 } from './actionsType';
 import axios from 'axios';
 
@@ -16,7 +22,7 @@ const getAllBreeds = () => async (dispatch) => {
         });
     } catch (e) {
         console.log(e);
-    }
+    };
 };
 
 const getBreedDetail = (id) => async (dispatch) => {
@@ -28,7 +34,7 @@ const getBreedDetail = (id) => async (dispatch) => {
         });
     } catch (e) {
         console.log(e);
-    }
+    };
 };
 
 const getBreedSearch = (name) => async (dispatch) => {
@@ -40,7 +46,7 @@ const getBreedSearch = (name) => async (dispatch) => {
         });
     } catch (e) {
         console.log(e);
-    }
+    };
 };
 
 const getAllTemperaments = () => async (dispatch) => {
@@ -52,7 +58,7 @@ const getAllTemperaments = () => async (dispatch) => {
         });
     } catch (e) {
         console.log(e);
-    }
+    };
 };
 
 const createNewBreed = (value) => async (dispatch) => {
@@ -66,7 +72,35 @@ const createNewBreed = (value) => async (dispatch) => {
     } catch (e) {
         console.log(e);
         return alert('Missing to enter mandatory data');
-    }
+    };
+};
+
+const Order = (order) => {
+    if (order === 'az') {
+        return {
+            type: AZ_ALPHABETIC_ORDER,
+        };
+    } else if (order === 'za') {
+        return {
+            type: ZA_ALPHABETIC_ORDER,
+        };
+    } else if (order === 'maxHigherWeight') {
+        return {
+            type: MAX_HIGHER_WEIGHT_ORDER,
+        };
+    } else if (order === 'minHigherWeight') {
+        return {
+            type: MIN_HIGHER_WEIGHT_ORDER,
+        };
+    } else if (order === 'maxLowerWeight'){
+        return {
+            type: MAX_LOWER_WEIGHT_ORDER,
+        }
+    } else if (order === 'minLowerWeight'){
+        return {
+            type: MIN_LOWER_WEIGHT_ORDER,
+        };
+    };
 };
 
 export {
@@ -74,5 +108,6 @@ export {
     getBreedDetail,
     getBreedSearch,
     getAllTemperaments,
-    createNewBreed
+    createNewBreed,
+    Order
 };

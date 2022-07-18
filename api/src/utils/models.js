@@ -3,6 +3,8 @@ const { Raza, Temperamento } = require('../db');
 const { Op } = require('sequelize');
 const { X_API_KEY } = process.env;
 
+const temperaments = ['Athletic, Easygoing, Timid, Friendly, Playful, Anxious', 'Intelligent, Fun-loving, Adorable, Friendly, Outgoing', 'Affectionate, Courageous, Clever, Gentle, Friendly, Playful, Aloof', 'Intelligent, Active, Loyal, Friendly, Outgoing, Playful'];
+
 const breedsRequest = async () => {
     const responseApi = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${X_API_KEY}`);
     const responseDb = await Raza.findAll({
@@ -12,6 +14,22 @@ const breedsRequest = async () => {
         include: Temperamento
     });
     const dataApi = responseApi.data.map(e => {
+        if (!e.temperament) {
+            if (e.id === 196) {
+                e.temperament = temperaments[0];
+            } else if (e.id === 197) {
+                e.temperament = temperaments[1];
+            } else if (e.id === 211) {
+                e.temperament = temperaments[2];
+            } else if (e.id === 261) {
+                e.temperament = temperaments[3];
+            }
+        }
+        if (!e.weight.metric.includes(' - ') && e.weight.metric.includes('NaN')) {
+            e.weight.metric = '20 - 30';
+        } else if (e.weight.metric.includes('NaN')) {
+            e.weight.metric = `${e.weight.metric.slice(-2)}`;
+        };
         return {
             id: e.id,
             image: e.image.url,
@@ -37,6 +55,22 @@ const breedDetail = async (id) => {
         const responseApi = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${X_API_KEY}`);
         if (!responseApi.data.length) throw new Error('Page not found');
         var dataApi = responseApi.data.filter(e => e.id === id);
+        if (!dataApi[0].temperament) {
+            if (dataApi[0].id === 196) {
+                dataApi[0].temperament = temperaments[0];
+            } else if (dataApi[0].id === 197) {
+                dataApi[0].temperament = temperaments[1];
+            } else if (dataApi[0].id === 211) {
+                dataApi[0].temperament = temperaments[2];
+            } else if (dataApi[0].id === 261) {
+                dataApi[0].temperament = temperaments[3];
+            }
+        }
+        if (!dataApi[0].weight.metric.includes(' - ') && dataApi[0].weight.metric.includes('NaN')) {
+            dataApi[0].weight.metric = '20 - 30';
+        } else if (dataApi[0].weight.metric.includes('NaN')) {
+            dataApi[0].weight.metric = `${dataApi[0].weight.metric.slice(-2)}`;
+        };
         var data = {
             id: dataApi[0].id,
             name: dataApi[0].name,

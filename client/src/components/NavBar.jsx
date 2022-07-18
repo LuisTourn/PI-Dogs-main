@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getAllBreeds } from '../redux/actions';
+import { getAllBreeds, getAllTemperaments } from '../redux/actions';
 import SearchBar from './SearchBar';
 
 const NavBar = () => {
@@ -10,6 +10,10 @@ const NavBar = () => {
     useEffect(() => {
         dispatch(getAllBreeds());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(getAllTemperaments());
+      }, [dispatch]);
 
     return (
         <div className='navbar'>
