@@ -9,7 +9,9 @@ import {
     MAX_HIGHER_WEIGHT_ORDER,
     MIN_HIGHER_WEIGHT_ORDER,
     MAX_LOWER_WEIGHT_ORDER,
-    MIN_LOWER_WEIGHT_ORDER
+    MIN_LOWER_WEIGHT_ORDER,
+    API_BREEDS_FILTER,
+    DB_BREEDS_FILTER
 } from './actionsType';
 import axios from 'axios';
 
@@ -75,7 +77,7 @@ const createNewBreed = (value) => async (dispatch) => {
     };
 };
 
-const Order = (order) => {
+const orderBreeds = (order) => {
     if (order === 'az') {
         return {
             type: AZ_ALPHABETIC_ORDER,
@@ -103,11 +105,24 @@ const Order = (order) => {
     };
 };
 
+/* const breedsFilter = (apiOrDb) => {
+    if (apiOrDb === 'api') {
+        return {
+            type: API_BREEDS_FILTER
+        };
+    } else if (apiOrDb === 'db') {
+        return {
+            type: DB_BREEDS_FILTER
+        };
+    };
+}; */
+
 export {
     getAllBreeds,
     getBreedDetail,
     getBreedSearch,
     getAllTemperaments,
     createNewBreed,
-    Order
+    orderBreeds,
+  //  breedsFilter
 };

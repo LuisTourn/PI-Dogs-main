@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllBreeds, Order } from '../redux/actions'
+import { orderBreeds, breedsFilter } from '../redux/actions'
 import Breed from './Breed';
 import './Style/Home.css';
 
 const Home = () => {
-  const [breeds, temps] = useSelector(state => [state.breeds, state.temperaments]);
+  const [breeds, filterBreeds /*, temps */] = useSelector(state => [state.breeds, state.filterBreeds/* , state.temperaments */]);
   const breedsPerPage = 8;
 
   const [currentPage, setCurrentPage] = useState(0);
   const [breedPage, setBreedPage] = useState([]);
-  const [tempsFilter, setTempsFilter] = useState('');
+ // const [tempsFilter, setTempsFilter] = useState('');
   const [order, setOrder] = useState('');
+  const [apiOrDbFilter, setApiOrDbFilter] = useState([]);
 
   if (breeds.length && !breedPage.length) setBreedPage([...breeds].splice(currentPage, breedsPerPage));
 
@@ -24,17 +25,19 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
-  const OrderHandler = (e) => {
-    console.log(e)
-    if (order !== e.target.value) {
-      setOrder(e.target.value)
-      dispatch(Order(e.target.value));
+  const orderHandler = (e) => {
+    const select = e.target.value;
+    if (select === 'alphabeticOrder' || select === 'weightOrder') return
+    if (order !== select) {
+      setOrder(select)
+      dispatch(orderBreeds(select));
     };
   };
   
   useEffect(() => {
     setBreedPage([...breeds].splice(currentPage * breedsPerPage, breedsPerPage));
-  }, [order]);
+  }, [order, breeds, currentPage]);
+
   
   const prevPageHandler = () => {
     const prevPage = currentPage - 1;
@@ -84,13 +87,13 @@ const Home = () => {
           onClick={OrderHandler}>
           Z - A
         </button> */}
-        <select name='Order' onChange={OrderHandler}>
-          <option selected hidden>Alphabetic Order</option>
+        <select name='alphabet' onClick={(e) => orderHandler(e)}>
+          <option value={'alphabeticOrder'} hidden>Alphabetic Order</option>
           <option value={'az'}>🔼 A - Z 🔽</option>
           <option value={'za'}>🔽 Z - A 🔼</option>
         </select>
-        <select name='weightOrder' onChange={OrderHandler}>
-          <option selected hidden>Weight Order</option>
+        <select name='weight' onClick={(e) => orderHandler(e)}>
+          <option value={'weightOrder'} hidden>Weight Order</option>
           <option value={'maxHigherWeight'}>🔼 Max Weight 🔽</option>
           <option value={'minHigherWeight'}>🔽 Max Weight 🔼</option>
           <option value={'maxLowerWeight'}>🔼 Min Weight 🔽</option>

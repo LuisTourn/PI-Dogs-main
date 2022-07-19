@@ -9,11 +9,14 @@ import {
     MAX_HIGHER_WEIGHT_ORDER,
     MIN_HIGHER_WEIGHT_ORDER,
     MAX_LOWER_WEIGHT_ORDER,
-    MIN_LOWER_WEIGHT_ORDER
+    MIN_LOWER_WEIGHT_ORDER,
+    API_BREEDS_FILTER,
+    DB_BREEDS_FILTER
 } from './actionsType'
 
 const initialState = {
     breeds: [],
+    searchBreeds: [],
     filterBreeds: [],
     breedDetail: {},
     temperaments: []
@@ -34,7 +37,7 @@ const reducer = (state = initialState, action) => {
         case GET_BREED_SEARCH:
             return {
                 ...state,
-                filterBreeds: state.breeds.filter(e => action.payload.includes(e.id))
+                searchBreeds: state.breeds.filter(e => action.payload.includes(e.id))
             };
         case GET_ALL_TEMPERAMENTS:
             return {
@@ -92,6 +95,16 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 breeds: [...state.breeds].sort((a, b) => parseInt(a.weight.slice(0, 2)) - parseInt(b.weight.slice(0, 2)))
             };
+/*         case API_BREEDS_FILTER:
+            return {
+                ...state,
+                filterBreeds: [...state.breeds].filter(e => e.id < 300)
+            };
+        case DB_BREEDS_FILTER:
+            return {
+                ...state,
+                filterBreeds: [...state.breeds].filter(e => e.id > 300)
+            }; */
         default:
             return state;
     };
