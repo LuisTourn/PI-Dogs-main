@@ -11,7 +11,8 @@ import {
     MAX_LOWER_WEIGHT_ORDER,
     MIN_LOWER_WEIGHT_ORDER,
     API_BREEDS_FILTER,
-    DB_BREEDS_FILTER
+    DB_BREEDS_FILTER,
+    TEMPERAMENTS_FILTER
 } from './actionsType';
 import axios from 'axios';
 
@@ -105,7 +106,7 @@ const orderBreeds = (order) => {
     };
 };
 
-/* const breedsFilter = (apiOrDb) => {
+const breedsFilter = (apiOrDb) => {
     if (apiOrDb === 'api') {
         return {
             type: API_BREEDS_FILTER
@@ -115,7 +116,14 @@ const orderBreeds = (order) => {
             type: DB_BREEDS_FILTER
         };
     };
-}; */
+};
+
+const temperamentsFilter = (temperament) => {
+    return {
+        type: TEMPERAMENTS_FILTER,
+        payload: temperament
+    };
+};
 
 export {
     getAllBreeds,
@@ -124,5 +132,6 @@ export {
     getAllTemperaments,
     createNewBreed,
     orderBreeds,
-  //  breedsFilter
+    breedsFilter,
+    temperamentsFilter
 };

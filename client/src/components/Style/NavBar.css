@@ -1,0 +1,31 @@
+.navbar {
+    background-color: rgba(0, 1, 42, 0.9);
+}
+
+.navbar-home, .navbar-create {
+    display: inline-block;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-family: Inter, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.navbar-home:hover, .navbar-create:hover {
+    color: #1eaee7;
+    font-style: oblique;
+    text-shadow: 20px;
+}
+
+.navbar-home h3, .navbar-create h3 {
+    padding: 10px 30px;
+}
+
+.navbar-home h3 {
+    padding-left: 50px;
+}
+
+.navbar-searchBar {
+    display: inline-block;
+    background-color: aquamarine;
+}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNewBreed } from '../redux/actions';
 import validateForm from '../utils';
-/* import { getAllTemperaments } from '../redux/actions'; */
+import './Style/CreationForm.css';
 
 const Form = () => {
   const [input, setInput] = useState({
@@ -16,9 +16,9 @@ const Form = () => {
     temperaments: []
   });
 
-  const temps = useSelector(state => state.temperaments);
-
   const dispatch = useDispatch();
+
+  const temps = useSelector(state => state.temperaments);
 
   const [checked, setChecked] = useState(
     new Array(124).fill(false)
@@ -30,11 +30,11 @@ const Form = () => {
       ...input,
       [e.target.name]: e.target.value
     });
-    const error = validateForm({
+    const errorToCheck = validateForm({
       ...input,
       [e.target.name]: e.target.value
     });
-    setError(error);
+    setError(errorToCheck);
     return error;
   };
 
@@ -49,118 +49,99 @@ const Form = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(createNewBreed({
-      name: `${input.name.slice(0, 1).toUpperCase()}${input.name.slice(1).toLowerCase()}`,
+      name: `${input.name.split(' ').map(e => `${e.slice(0, 1).toUpperCase()}${e.slice(1).toLowerCase()}`).join(' ')}`,
       weight: (input.minWeight !== input.maxWeight) ? `${input.minWeight} - ${input.maxWeight}` : `${input.minWeight}`,
       height: (input.minHeight !== input.maxHeight) ? `${input.minHeight} - ${input.maxHeight}` : `${input.minHeight}`,
-      lifeSpan: (input.minLifeSpan !== input.maxLifeSpan) ? `${input.minLifeSpan} - ${input.maxLifeSpan} years` : `${input.minWeight} years`,
+      lifeSpan: (input.minLifeSpan !== input.maxLifeSpan) ? `${input.minLifeSpan} - ${input.maxLifeSpan} years` : `${input.minLifeSpan} years`,
       temperaments: temps.map(e => e.id).filter((e, i) => checked[i] === true)
     }));
     setInput({ name: '', minWeight: '', maxWeight: '', minHeight: '', maxHeight: '', minLifeSpan: '', maxLifeSpan: '', temperaments: [] });
     setChecked(checked.fill(false));
   };
 
+console.log(input.name, Object.keys(error))
+
   return (
-    <form action='submit' onSubmit={handleSubmit}>
+    <form className='form' action='submit' onSubmit={handleSubmit}>
       <h3>Do you want to create a new breed?</h3>
       <p>Fulfill the information below</p>
-      <div>
+      <div className='form-name'>
         <label>Name: </label>
         <input
           type='text'
           name='name'
           value={input.name}
           onChange={handleOnChange}
-          className={error.name && 'danger'}
         />
-        {error.name && <p>{error.name}</p>}
+        {error.name && <p className='danger'>{error.name}</p>}
       </div>
-      <div>
-        <label>Weight: </label>
+      <div className='form-inputs'>
+        <label>Weight: &nbsp;</label>
         <label>Min: </label>
         <input
           type='number'
           name='minWeight'
           value={input.minWeight}
           onChange={handleOnChange}
-          className={error.minWeight && 'danger'}
         />
-        {error.minWeight && <p>{error.minWeight}</p>}
+        {error.minWeight && <p className='danger'>{error.minWeight}</p>}
         <label>Max: </label>
         <input
           type='number'
           name='maxWeight'
           value={input.maxWeight}
           onChange={handleOnChange}
-          className={error.maxWeight && 'danger'}
         />
-        {error.maxWeight && <p>{error.maxWeight}</p>}
+        {error.maxWeight && <p className='danger'>{error.maxWeight}</p>}
       </div>
-      <div>
-        <label>Height: </label>
+      <div className='form-inputs'>
+        <label>Height: &nbsp;</label>
         <label>Min: </label>
         <input
           type='number'
           name='minHeight'
           value={input.minHeight}
           onChange={handleOnChange}
-          className={error.minHeight && 'danger'}
         />
-        {error.minHeight && <p>{error.minHeight}</p>}
+        {error.minHeight && <p className='danger'>{error.minHeight}</p>}
         <label>Max: </label>
         <input
           type='number'
           name='maxHeight'
           value={input.maxHeight}
           onChange={handleOnChange}
-          className={error.maxHeight && 'danger'}
         />
-        {error.maxHeight && <p>{error.maxHeight}</p>}
+        {error.maxHeight && <p className='danger'>{error.maxHeight}</p>}
       </div>
-      <div>
-        <label>Life Span: </label>
+      <div className='form-inputs'>
+        <label>Life Span: &nbsp;</label>
         <label>Min: </label>
         <input
           type='number'
           name='minLifeSpan'
           value={input.minLifeSpan}
           onChange={handleOnChange}
-          className={error.minLifeSpan && 'danger'}
         />
-        {error.minLifeSpan && <p>{error.minLifeSpan}</p>}
+        {error.minLifeSpan && <p className='danger'>{error.minLifeSpan}</p>}
         <label>Max: </label>
         <input
           type='number'
           name='maxLifeSpan'
           value={input.maxLifeSpan}
           onChange={handleOnChange}
-          className={error.maxHeight && 'danger'}
         />
-        {error.maxHeight && <p>{error.maxHeight}</p>}
+        {error.maxLifeSpan && <p className='danger'>{error.maxLifeSpan}</p>}
       </div>
       <div>
-        <label>Temperaments: </label>
-        {/*       <select
-        multiple={true}
-        value={temperaments}
-      /> */}
-        <ul>
-          {temps.map((e, i) => {
-            return (
-              <li key={e.id}>
-                <div>
-                  <input
-                    type="checkbox"
-                    name={e.name}
-                    value={e.name}
-                    checked={checked[i]}
-                    onChange={() => handleTempsOnChange(i)}
-                  />
-                  <label>{e.name}</label>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+      <label>Temperaments: </label>
+      <select className='form-temperaments' name='temperamentsForm' id='temperamentsFormId'>
+        <option value={'tempsFilter'} hidden>Select the temperaments</option>
+          {
+            temps && temps.map((e, i) =>
+              <option type="checkbox" key={e.id} name={`temp${e.name}`} value={e.name} checked={checked[i]}
+              onChange={() => handleTempsOnChange(i)}>{e.name}</option>)
+          }
+        </select>
       </div>
       <button
         type="submit"

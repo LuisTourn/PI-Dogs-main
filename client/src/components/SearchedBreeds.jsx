@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Breed from './Breed';
-// import './Style/Home.css';
+import './Style/SearchedBreeds.css';
 
 const SearchedBreeds = () => {
   const searchBreeds = useSelector(state => state.searchBreeds);
@@ -37,19 +37,21 @@ const SearchedBreeds = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className='search'>
+      <div className='search-pagination'>
+        <button
+          className='search-pagination-prevButton'
+          onClick={prevPageHandler} >
+          ⇇ Prev
+        </button>
         <h4>{currentPage}</h4>
         <button
-          onClick={prevPageHandler} >
-          Prev
-        </button>
-        <button
+          className='search-pagination-nextButton'
           onClick={nextPageHandler} >
-          Next
+          Next ⇉
         </button>
       </div>
-      <div className='container'>
+      <div className='containerSearch'>
         {
           breedPage && breedPage.map(e => <Breed
             key={e.id}

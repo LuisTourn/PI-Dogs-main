@@ -1,0 +1,58 @@
+.form {
+    background: linear-gradient(#1b1b4d, #cceef7);
+    color: white;
+    padding: 1rem;
+    font-size: 60px;
+    width: 80vw;
+    height: 80vw;
+    margin: auto;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+}
+
+.form h3 {
+    margin: 25.1px 0 0 0; 
+    border: 0;
+}
+
+.form p {
+    font-size: 30px;
+    font-weight: 400;
+    margin-left: 20px;
+}
+
+.form-name, .form-inputs, .form-temperaments {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 50px 20px;
+}
+
+.form-name input, .form-inputs input {
+    align-items: left;
+    text-align: left;
+}
+
+.form-name input {
+    margin: 5px 10px;
+    width: 500px;
+}
+
+.form-inputs input {
+    margin: 5px 50px 5px 5px;
+    width: 80px;
+}
+
+.form .danger {
+    color: rgb(154, 6, 6);
+    padding: 2px 0;
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    position: absolute;
+}
+
+.form-temperaments ul {
+    list-style:none;
+    display: flex;
+}

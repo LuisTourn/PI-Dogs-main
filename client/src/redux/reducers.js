@@ -11,7 +11,8 @@ import {
     MAX_LOWER_WEIGHT_ORDER,
     MIN_LOWER_WEIGHT_ORDER,
     API_BREEDS_FILTER,
-    DB_BREEDS_FILTER
+    DB_BREEDS_FILTER,
+    TEMPERAMENTS_FILTER
 } from './actionsType'
 
 const initialState = {
@@ -95,7 +96,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 breeds: [...state.breeds].sort((a, b) => parseInt(a.weight.slice(0, 2)) - parseInt(b.weight.slice(0, 2)))
             };
-/*         case API_BREEDS_FILTER:
+        case API_BREEDS_FILTER:
             return {
                 ...state,
                 filterBreeds: [...state.breeds].filter(e => e.id < 300)
@@ -104,7 +105,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 filterBreeds: [...state.breeds].filter(e => e.id > 300)
-            }; */
+            };
+        case TEMPERAMENTS_FILTER:
+            return {
+                ...state,
+                filterBreeds: [...state.breeds].filter(e => e.temperament.includes(action.payload))
+            }
         default:
             return state;
     };

@@ -1,8 +1,63 @@
-.button {
-    background-color: #bcbc57;
-    border: none;
-    color: white;
-    padding: 15px 32px;
+.landingPage {
+    padding: 0;
+    margin: 50px 0;
+    background: linear-gradient(#1b1b4d, #cceef7);
+    width: 100vw;
+    height: 90vh;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.landingPage-image {
+    display: inline-block;
+    width: fit-content;
+    margin: 100px 0 60px 80px;
+    opacity: 0.85;
+}
+
+.landingPage-welcome {
+    position: absolute;
+    top: 32vh;
+    right: 100px;
+    margin: 0;
+    width: fit-content;
+}
+
+.landingPage-welcome .button {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: transparent 0 0 0 3px, rgba(18, 18, 18, .1) 0 6px 20px;
+    box-sizing: border-box;
+    color: #121212;
+    display: inline-flex;
+    flex: 1 1 auto;
+    font-family: Inter, sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 20px 12px;
+    transition: box-shadow .2s, -webkit-box-shadow .2s;
+    white-space: nowrap;
+    border: 0;
+    user-select: none;
+    touch-action: manipulation;
     text-align: center;
-    font-size: 16px;
+    cursor: pointer;
+    margin: 50px 135px;
+}
+
+.landingPage-welcome-link {
+    text-decoration: none;
+}
+
+.landingPage-welcome .button:hover {
+    background-color: #1eaee7;
+}
+
+.landingPage-welcome h1 {
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 100px;
+    margin: auto;
+    color:#eeca00;
 }
