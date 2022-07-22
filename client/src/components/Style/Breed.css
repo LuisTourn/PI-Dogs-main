@@ -28,11 +28,14 @@
 }
 
 .card h4 {
+    font-size: 20px;
     font-weight: 600;
+    margin: 10px;
 }
 
 .card p {
-    padding: 0 1rem;
+    padding: 0 12px;
+    margin: 5px;
     font-size: 16px;
     font-weight: 300;
 }

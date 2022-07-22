@@ -1,9 +1,13 @@
 .searchBar {
     float: right;
     padding: 18px 15px;
-    vertical-align: bottom;
-    margin-right: 20px;
+    margin-right: 80px;
     margin-top: 10px;
+}
+
+.searchBar-button {
+    float: right;
+    padding: 2px 0;
 }
 
 .searchBar input, .searchBar-danger {

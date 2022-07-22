@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { getBreedSearch } from '../redux/actions';
+import { getBreedSearch, searchValue } from '../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {useHistory } from 'react-router-dom';
 import './Style/SearchBar.css';
 
-const SearchBar = () => {
+const SearchBar = ({ setCurrentPage }) => {
     const [search, setSearch] = useState('');
     const [error, setError] = useState('');
 
-    const breeds = useSelector(state => state.breeds);
+    let history = useHistory();
+
+    const breeds = useSelector(state => state.all);
 
     const dispatch = useDispatch();
 
@@ -23,10 +25,14 @@ const SearchBar = () => {
         }
     };
 
-    const handleOnClick = () => {
+    const handleOnClick = (e) => {
+        e.preventDefault();
+        setCurrentPage(0);
         dispatch(getBreedSearch(search));
+        dispatch(searchValue(search));
         setSearch('');
         setError('');
+        history.push('/home');
     };
 
     return (
@@ -37,15 +43,15 @@ const SearchBar = () => {
                 value={search}
                 onChange={handleOnChange}
             />
-            <Link className='searchBar-button' to='/search' >
+            <div className='searchBar-button'>
                 <button
                     disabled={!search}
                     onClick={handleOnClick}
                     >Search</button>
-            </Link>
+            </div>
             {error && <p className='searchBar-danger'>{error}</p>}
         </div>
-    )
+    );
 };
 
 export default SearchBar;

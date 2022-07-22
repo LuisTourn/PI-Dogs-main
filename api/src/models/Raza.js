@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             primaryKey: true
         },
+        image: { 
+            type: DataTypes.STRING,
+            allowNull: true
+          },
         height: {
             type: DataTypes.STRING,
             allowNull: false

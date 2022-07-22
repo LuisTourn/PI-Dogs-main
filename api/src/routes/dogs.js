@@ -14,7 +14,7 @@ dogs.get('/', async (req, res, next) => {
             res.send(data);
         }
         catch (e) {
-            next(e);
+            res.status(400).send(e.message);
         };
     } else {
         next()
@@ -50,7 +50,7 @@ dogs.get('/', async (req, res) => {
 dogs.post('/', async (req, res) => {
     try {
         await breedCreator(req.body);
-        res.status(201).send('Raza creada exitosamente');
+        res.status(201).send('Breed successfully created');
     } catch (e) {
         res.status(400).send(e.message);
     };

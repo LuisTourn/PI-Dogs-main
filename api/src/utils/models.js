@@ -41,6 +41,7 @@ const breedsRequest = async () => {
     const dataDb = responseDb.map(e => {
         return {
             id: e.id,
+            image: e.image,
             name: e.name,
             temperament: e.temperament,
             weight: e.weight,
@@ -91,6 +92,7 @@ const breedDetail = async (id) => {
         if (dataDb === null) throw new Error('Page not found');
         var data = {
             id: dataDb.id,
+            image: dataDb.image,
             name: dataDb.name,
             temperament: dataDb.Temperamentos.reduce((temp, el) => temp.concat(`, ${el.name}`),'').slice(2),
             weight: dataDb.weight,
@@ -102,7 +104,6 @@ const breedDetail = async (id) => {
 };
 
 const breedSeacrh = async (name) => {
-    //  if (!name) breedsRequest();
     const responseApi = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${name}&api_key=${X_API_KEY}`);
     const responseDb = await Raza.findAll({
         attributes: ['id'],
@@ -114,46 +115,26 @@ const breedSeacrh = async (name) => {
     });
     const dataApi = responseApi.data.map(e => {
         return e.id;
-        /*             name: e.name,
-            temperament: e.temperament,
-            weight: e.weight.metric */
     }).concat(responseDb);
     const dataDb = responseDb.map(e => {
         return e.id
     });
     const data = [...dataApi, ...dataDb];
-    if (!data.length) throw new Error('Raza no encontrada');
+    if (!data.length) throw new Error('Breed not found');
     return data;
 };
 
 const breedCreator = async (obj) => {
-    const { name, height, weight, lifeSpan, temperaments } = obj;
-    if (!name || !height || !weight || !temperaments.length) throw new Error('No se pudo crear raza. Faltan campos obligatorios');
-    const breed = await Raza.create({ name, height, weight, lifeSpan });
+    const { name, height, weight, lifeSpan, image, temperaments } = obj;
+    if (!name || !height || !weight || !temperaments.length) throw new Error('Could not create breed. Missing required fields');
+    const dog = await Raza.findOne({
+        where: {
+            name: name
+    }});
+    if (dog) throw new Error('Existing breed');
+    const breed = await Raza.create({ name, height, weight, lifeSpan, image });
     let temperamentsId = await breed.addTemperamento(temperaments);
-    return temperamentsId
- //   let temperamentsId = temperaments.map(e => Temperamento.findByPk(e));
- //   await Promise.all(temperamentsId);
-//    temperament.forEach(async e =>
-//        await Temperamento.findOrCreate({
-//            where: {
-//                name: e
-//            }
-//        })
-//    );
-//    const temperaments = await Temperamento.findAll({
-//        attributes: id
-//    },
-//        {
-//            where: {
-//                name: {
-//                    [Op.like]: {
-//                        [Op.any]: temperament
-//                    }
-//                }
-//            }
-//        })
- //   await breed.addTemperamentos(temperamentsId);
+    return temperamentsId;
 };
 
 const setAllTemperaments = async () => {
@@ -172,7 +153,7 @@ const setAllTemperaments = async () => {
 
 const getTemperaments = async () => {
     const temperaments = await Temperamento.findAll();
-    if(!temperaments || !temperaments.length) throw new Error('No hay temperamentos disponibles');
+    if(!temperaments || !temperaments.length) throw new Error('No temperaments available');
     return temperaments;
 };
 

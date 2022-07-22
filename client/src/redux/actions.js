@@ -12,17 +12,21 @@ import {
     MIN_LOWER_WEIGHT_ORDER,
     API_BREEDS_FILTER,
     DB_BREEDS_FILTER,
-    TEMPERAMENTS_FILTER
+    TEMPERAMENTS_FILTER,
+    LOADING_WAIT,
+    SEARCH_VALUE
 } from './actionsType';
 import axios from 'axios';
 
 const getAllBreeds = () => async (dispatch) => {
     try {
+        dispatch(loadingWait(true));
         const breeds = await axios('http://localhost:3001/dogs');
-        return dispatch({
+        dispatch({
             type: GET_ALL_BREEDS,
             payload: breeds.data
         });
+        return dispatch(loadingWait(false));
     } catch (e) {
         console.log(e);
     };
@@ -30,11 +34,13 @@ const getAllBreeds = () => async (dispatch) => {
 
 const getBreedDetail = (id) => async (dispatch) => {
     try {
+        dispatch(loadingWait(true));
         const breed = await axios(`http://localhost:3001/dogs/${id}`);
-        return dispatch({
+        dispatch({
             type: GET_BREED_DETAIL,
             payload: breed.data
         });
+        return dispatch(loadingWait(false));
     } catch (e) {
         console.log(e);
     };
@@ -42,14 +48,30 @@ const getBreedDetail = (id) => async (dispatch) => {
 
 const getBreedSearch = (name) => async (dispatch) => {
     try {
+        dispatch(loadingWait(true));
         const breed = await axios(`http://localhost:3001/dogs?name=${name}`);
-        return dispatch({
+        dispatch({
             type: GET_BREED_SEARCH,
             payload: breed.data
         });
+        return dispatch(loadingWait(false));
     } catch (e) {
         console.log(e);
     };
+};
+
+const searchValue = value => dispatch => {
+    return dispatch({
+        type: SEARCH_VALUE,
+        payload: value
+    });
+};
+
+const resetBreedSearch = array => dispatch => {
+    return dispatch({
+        type: GET_BREED_SEARCH,
+        payload: array
+    });
 };
 
 const getAllTemperaments = () => async (dispatch) => {
@@ -125,13 +147,23 @@ const temperamentsFilter = (temperament) => {
     };
 };
 
+const loadingWait = (wait) => (dispatch) => {
+    return dispatch({
+        type: LOADING_WAIT,
+        payload: wait
+    })
+}
+
 export {
     getAllBreeds,
     getBreedDetail,
     getBreedSearch,
+    searchValue,
+    resetBreedSearch,
     getAllTemperaments,
     createNewBreed,
     orderBreeds,
     breedsFilter,
-    temperamentsFilter
+    temperamentsFilter,
+    loadingWait    
 };

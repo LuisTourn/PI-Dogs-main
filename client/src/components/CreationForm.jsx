@@ -7,6 +7,7 @@ import './Style/CreationForm.css';
 const Form = () => {
   const [input, setInput] = useState({
     name: '',
+    image: '',
     minWeight: '',
     maxWeight: '',
     minHeight: '',
@@ -20,9 +21,7 @@ const Form = () => {
 
   const temps = useSelector(state => state.temperaments);
 
-  const [checked, setChecked] = useState(
-    new Array(124).fill(false)
-  );
+  const [tempsToAdd, setTempsToAdd] = useState([]);
   const [error, setError] = useState({});
 
   const handleOnChange = (e) => {
@@ -35,36 +34,68 @@ const Form = () => {
       [e.target.name]: e.target.value
     });
     setError(errorToCheck);
-    return error;
+ 
   };
 
-  const handleTempsOnChange = (position) => {
-    const updatedChecked = checked.map((value, index) =>
-      index === position ? !value : value
-    );
+  const handleTemps = (e) => {
+    const selected = e.target.value;
+    if (selected === 'temperamentsForm') return;
+    if (input.temperaments.includes(e.target.value)) return;
+ 
+    setInput({
+      ...input,
+      temperaments: [...input.temperaments, selected]
+    });
+    setTempsToAdd([...tempsToAdd, temps.find(e => e.id === parseInt(selected))]);
+  };
 
-    setChecked(updatedChecked);
+  const handleDelete = (x) => {
+    console.log(x)
+    let takedOut = input.temperaments.filter(e => parseInt(e) !== x.id);
+    let temperamentsToAdd = tempsToAdd.filter(e => parseInt(e.id) !== parseInt(x.id));
+
+    setInput({
+      ...input,
+      temperaments: takedOut
+    });
+    setTempsToAdd(temperamentsToAdd);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createNewBreed({
+    const newBreed = {
       name: `${input.name.split(' ').map(e => `${e.slice(0, 1).toUpperCase()}${e.slice(1).toLowerCase()}`).join(' ')}`,
+      image: `${input.image}`,
       weight: (input.minWeight !== input.maxWeight) ? `${input.minWeight} - ${input.maxWeight}` : `${input.minWeight}`,
       height: (input.minHeight !== input.maxHeight) ? `${input.minHeight} - ${input.maxHeight}` : `${input.minHeight}`,
       lifeSpan: (input.minLifeSpan !== input.maxLifeSpan) ? `${input.minLifeSpan} - ${input.maxLifeSpan} years` : `${input.minLifeSpan} years`,
-      temperaments: temps.map(e => e.id).filter((e, i) => checked[i] === true)
-    }));
-    setInput({ name: '', minWeight: '', maxWeight: '', minHeight: '', maxHeight: '', minLifeSpan: '', maxLifeSpan: '', temperaments: [] });
-    setChecked(checked.fill(false));
+      temperaments: input.temperaments
+    };
+
+    dispatch(createNewBreed(newBreed))
+      .then(() => {
+        let form = document.getElementById('formId');
+        form.reset();
+      })
+    setInput({
+      name: '',
+      image: '',
+      minWeight: '',
+      maxWeight: '',
+      minHeight: '',
+      maxHeight: '',
+      minLifeSpan: '',
+      maxLifeSpan: '',
+      temperaments: []
+    });
+
+    setTempsToAdd([]);
   };
 
-console.log(input.name, Object.keys(error))
-
   return (
-    <form className='form' action='submit' onSubmit={handleSubmit}>
+    <form className='form' id='formId' action='submit' onSubmit={handleSubmit}>
       <h3>Do you want to create a new breed?</h3>
-      <p>Fulfill the information below</p>
+      <p className='form-p'>Fulfill the information below</p>
       <div className='form-name'>
         <label>Name: </label>
         <input
@@ -74,6 +105,16 @@ console.log(input.name, Object.keys(error))
           onChange={handleOnChange}
         />
         {error.name && <p className='danger'>{error.name}</p>}
+      </div>
+      <div className='form-image'>
+        <label>Image url: </label>
+        <input
+          type='text'
+          name='image'
+          value={input.image}
+          onChange={handleOnChange}
+        />
+        {error.image && <p className='danger'>{error.image}</p>}
       </div>
       <div className='form-inputs'>
         <label>Weight: &nbsp;</label>
@@ -132,16 +173,21 @@ console.log(input.name, Object.keys(error))
         />
         {error.maxLifeSpan && <p className='danger'>{error.maxLifeSpan}</p>}
       </div>
-      <div>
+      <div className='form-temperaments'>
       <label>Temperaments: </label>
-      <select className='form-temperaments' name='temperamentsForm' id='temperamentsFormId'>
-        <option value={'tempsFilter'} hidden>Select the temperaments</option>
+      <select className='form-temperaments-select' name='temperamentsForm' id='temperamentsFormId' onChange={e => handleTemps(e)}>
+        <option selected value={'tempsFilter'} hidden>Select temperaments</option>
           {
-            temps && temps.map((e, i) =>
-              <option type="checkbox" key={e.id} name={`temp${e.name}`} value={e.name} checked={checked[i]}
-              onChange={() => handleTempsOnChange(i)}>{e.name}</option>)
+            temps?.map(e =>{
+              return <option key={e.id} name={`temp${e.name}`} value={e.id}>{e.name}</option>})
           }
-        </select>
+          </select>
+          <div>
+            {console.log(tempsToAdd)}
+            {tempsToAdd?.map(e => {
+              console.log(e)
+            return ( <span key={e.id} onClick={() => handleDelete(e)}>{`${e.name} `}</span> )})}
+          </div>
       </div>
       <button
         type="submit"

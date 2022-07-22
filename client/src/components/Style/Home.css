@@ -1,7 +1,7 @@
 .home {
     background: linear-gradient(#1b1b4d, #cceef7);
     width: 80vw;
-    height: 170vh;
+    height: 116vh;
     margin: auto;
     padding: 1rem;
 }
@@ -49,6 +49,7 @@
     flex-flow: row;
     justify-content: center;
     height: 35px;
+    margin-top: 15px;
 }
 
 .home-pagination button {
@@ -89,18 +90,19 @@
 
 .home-pagination h4 {
     color: #fff;
-    font-size: 20px;
+    font-size: 30px;
     line-height: 1;
     margin: 0;
-    padding: 10px 0;
+    padding: 2px 0;
 }
 
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1500px;
     height: 430px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 20px 0;
     margin: auto;
 }
